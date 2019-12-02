@@ -17,6 +17,12 @@
             android:layout_height="wrap_content"
             android:text="GRIDFILL" />
 
+        <TextView
+            android:id="@+id/rules"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hi" />
+
         <Button
             android:id="@+id/start"
             android:layout_width="match_parent"
@@ -28,5 +34,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="LeaderBoard" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOG-OUT" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
