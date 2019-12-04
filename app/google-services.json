@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "395045099688",
+    "firebase_url": "https://gridfill-c3a37.firebaseio.com",
+    "project_id": "gridfill-c3a37",
+    "storage_bucket": "gridfill-c3a37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395045099688:android:10ac609dbd54fa77f6ca9d",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "395045099688-hkqpprrm5isdct197b8deekrevqfrdfk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "61926a39b54e5f857cc80ab26e678cda2c3a9b69"
+          }
+        },
+        {
+          "client_id": "395045099688-gse1qhiqpqabau4f4lo3qlqptrf4kau4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiNV8y4gqDodlZzR7P1e3FLWGRkm32Xl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "395045099688-gse1qhiqpqabau4f4lo3qlqptrf4kau4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

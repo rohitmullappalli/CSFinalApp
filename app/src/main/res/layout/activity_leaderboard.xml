@@ -18,31 +18,31 @@
             android:text="GRIDFILL LEADERBOARD" />
 
         <TextView
-            android:id="@+id/1stplace"
+            android:id="@+id/t1stplace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/2ndplace"
+            android:id="@+id/t2ndplace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/3rdplace"
+            android:id="@+id/t3rdplace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/4thplace"
+            android:id="@+id/t4thplace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/5thplace"
+            android:id="@+id/t5thplace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />
