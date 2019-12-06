@@ -18,16 +18,20 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class Register extends AppCompatActivity {
 
+    EditText eName, eEmail, ePassword;
+    Button register, loginInstead;
+    FirebaseAuth fAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        final EditText eName = findViewById(R.id.name);
-        final EditText eEmail = findViewById(R.id.email);
-        final EditText ePassword = findViewById(R.id.password);
-        Button register = findViewById(R.id.register);
-        Button loginInstead = findViewById(R.id.logininstead);
-        final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+        eName = findViewById(R.id.name);
+        eEmail = findViewById(R.id.email);
+        ePassword = findViewById(R.id.password);
+        register = findViewById(R.id.register);
+        loginInstead = findViewById(R.id.logininstead);
+        fAuth = FirebaseAuth.getInstance();
 
         if (fAuth.getCurrentUser() != null) {
             startActivity (new Intent(getApplicationContext(), MainActivity.class));
@@ -49,15 +53,19 @@ public class Register extends AppCompatActivity {
                 String password = ePassword.getText().toString().trim();
                 if(TextUtils.isEmpty(email)) {
                     eEmail.setError("Must have an Email");
+                    return;
                 }
                 if(TextUtils.isEmpty(password)) {
                     ePassword.setError("Must have a password");
+                    return;
                 }
                 if(TextUtils.isEmpty(name)) {
                     eName.setError("At least one character is required in Name");
+                    return;
                 }
                 if(password.length() < 5) {
                     ePassword.setError("Password must be at least 5 characters");
+                    return;
                 }
                 fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override

@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button startGame = findViewById(R.id.start);
         Button leaderBoard = findViewById(R.id.leaderboard);
-        Button logOut = findViewById(R.id.logout);
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -30,13 +29,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), Leaderboard.class));
             }
         });
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth logBruh = FirebaseAuth.getInstance();
-                logBruh.signOut();
-                startActivity(new Intent(getApplicationContext(), Login.class));
-            }
-        });
+    }
+    public void logout(View view) {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(), Login.class));
+        finish();
     }
 }
