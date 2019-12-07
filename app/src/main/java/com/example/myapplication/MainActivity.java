@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Game.class));
+                startActivity(new Intent(getApplicationContext(), GridLineView.class));
             }
         });
         leaderBoard.setOnClickListener(new View.OnClickListener() {
