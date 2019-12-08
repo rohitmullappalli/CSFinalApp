@@ -10,7 +10,7 @@ public class Solutions {
     private List<Integer> listXEven = new ArrayList<>();
     private List<Integer> listYEven = new ArrayList<>();
 
-    public int[] possibleSolutions(int gridSize) {
+    public void possibleSolutions(int gridSize) {
         for (int i = 0; i < gridSize; i = i + 2) {
             listXEven.add(i);
             listYEven.add(i);
