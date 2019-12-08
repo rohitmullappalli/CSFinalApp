@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
@@ -21,14 +22,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private List<GameRectangle> rects = new ArrayList<GameRectangle>();
     private float sizeX;
     private float sizeY;
-    private int[] start = {2, 2};
-    private int[] end = {3, 3};
-    private int[] playerPosition = start;
+    private int[] start;
+    private int[] end;
+    private int[] playerPosition;
     private RectF up;
     private RectF down;
     private RectF left;
     private RectF right;
     private Rect bruhmoment;
+    private List<Integer> listXOdd = new ArrayList<>();
+    private List<Integer> listYOdd = new ArrayList<>();
+    private List<Integer> listXEven = new ArrayList<>();
+    private List<Integer> listYEven = new ArrayList<>();
     //newGame starts an actualGame activity, and gives it an intent to set level to 0.
     private RectF newGame;
     //newGame starts an actualGame activity, and gives it an intent to keep the level the same as well as the start and end points.
@@ -43,6 +48,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         left = new RectF(sizeX / 2 - 350, sizeY / 2 + 550, sizeX / 2 - 150, sizeY / 2 + 750);
         right = new RectF(sizeX / 2 + 350, sizeY / 2 + 550, sizeX / 2 + 150, sizeY / 2 + 750);
         level = c;
+        possibleSolutions(level);
+        start = randomSolution();
+        end = randomSolution();
+        playerPosition = new int[]{start[0], start[1]};
 
         getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
@@ -144,6 +153,41 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(left, buttonPaint);
         if (bruhmoment != null) {
             canvas.drawRect(bruhmoment, buttonPaint);
+        }
+    }
+    public void possibleSolutions(int level) {
+        int gridSize = level / 5;
+        gridSize = 3 + gridSize * 2;
+        for (int i = 0; i < gridSize; i = i + 2) {
+            listXEven.add(i);
+            listYEven.add(i);
+        }
+        for (int k = 1; k < gridSize; k = k + 2) {
+            listXOdd.add(k);
+            listYOdd.add(k);
+        }
+    }
+
+    public int[] randomSolution() {
+        int[] a = new int[] { 1, 2}; //1 is odds, 2 is evens
+        int[] solution = new int[2];
+        double b = Math.floor(Math.random() * a.length);
+        int c = (int) b;
+        int d = a[c];
+        if (d == 1) {
+            Random rand = new Random();
+            int randomX = listXOdd.get(rand.nextInt(listXOdd.size()));
+            int randomY = listYOdd.get(rand.nextInt(listYOdd.size()));
+            solution[0] = randomX;
+            solution[1] = randomY;
+            return solution;
+        } else {
+            Random random = new Random();
+            int randomX = listXEven.get(random.nextInt(listXOdd.size()));
+            int randomY = listYEven.get(random.nextInt(listYOdd.size()));
+            solution[0] = randomX;
+            solution[1] = randomY;
+            return solution;
         }
     }
 

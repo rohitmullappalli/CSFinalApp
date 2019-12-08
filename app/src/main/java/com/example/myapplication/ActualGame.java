@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActualGame extends AppCompatActivity {
-    private static int level = 0;
+    private static int level = 5;
     private List<GameRectangle> rects = new ArrayList<GameRectangle>();
     private int sizeX;
     private int sizeY;
