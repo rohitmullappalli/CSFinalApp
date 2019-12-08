@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -47,11 +48,35 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         down = new RectF(sizeX / 2 - 100, sizeY / 2 + 550, sizeX / 2 + 100, sizeY / 2 + 750);
         left = new RectF(sizeX / 2 - 350, sizeY / 2 + 550, sizeX / 2 - 150, sizeY / 2 + 750);
         right = new RectF(sizeX / 2 + 350, sizeY / 2 + 550, sizeX / 2 + 150, sizeY / 2 + 750);
+        newGame = new RectF(sizeX / 2 - 600, sizeY / 2 + 300, sizeX / 2 - 400, sizeY / 2 + 500);
+        reset = new RectF(sizeX / 2 + 400, sizeY / 2 + 300, sizeX / 2 + 600, sizeY / 2 + 500);
         level = c;
         possibleSolutions(level);
         start = randomSolution();
         end = randomSolution();
         playerPosition = new int[]{start[0], start[1]};
+
+        getHolder().addCallback(this);
+        thread = new MainThread(getHolder(), this);
+        setFocusable(true);
+
+
+    }
+    public GamePanel(Context context, float a, float b, int c, int[] d, int[] e) {
+        super(context);
+        sizeX = a;
+        sizeY = b;
+        up = new RectF(sizeX / 2 - 100,sizeY / 2 + 300,sizeX / 2 + 100,sizeY / 2 + 500);
+        down = new RectF(sizeX / 2 - 100, sizeY / 2 + 550, sizeX / 2 + 100, sizeY / 2 + 750);
+        left = new RectF(sizeX / 2 - 350, sizeY / 2 + 550, sizeX / 2 - 150, sizeY / 2 + 750);
+        right = new RectF(sizeX / 2 + 350, sizeY / 2 + 550, sizeX / 2 + 150, sizeY / 2 + 750);
+        newGame = new RectF(sizeX / 2 - 600, sizeY / 2 + 300, sizeX / 2 - 400, sizeY / 2 + 500);
+        reset = new RectF(sizeX / 2 + 400, sizeY / 2 + 300, sizeX / 2 + 600, sizeY / 2 + 500);
+        level = c;
+        possibleSolutions(level);
+        start = d;
+        end = e;
+        playerPosition = new int[]{d[0], d[1]};
 
         getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
@@ -101,6 +126,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 if (x < sizeX / 2 + 350 && y > sizeY / 2 + 550 && x > sizeX / 2 + 150 && y < sizeY / 2 + 750) {
                     bruhmoment = new Rect(700, 500, 900, 700);
                 }
+                if (x > sizeX / 2 - 600 && x < sizeX / 2 - 400 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
+                    Intent a = new Intent(getContext(), ActualGame.class);
+                    a.putExtra("restart", 0);
+                    a.putExtra("sizeX", sizeX);
+                    a.putExtra("sizeY", sizeY);
+                    getContext().startActivity(a);
+
+                }
+                if (x > sizeX / 2 + 400 && x < sizeX / 2 + 600 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
+                    Intent a = new Intent(getContext(), ActualGame.class);
+                    a.putExtra("reset1", level);
+                    a.putExtra("start", start);
+                    a.putExtra("end", end);
+                    a.putExtra("sizeX", sizeX);
+                    a.putExtra("sizeY", sizeY);
+                    getContext().startActivity(a);
+                }
 
         }
         return super.onTouchEvent(event);
@@ -133,6 +175,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         endPaint.setColor(Color.RED);
         Paint buttonPaint = new Paint();
         buttonPaint.setColor(Color.GREEN);
+        Paint resetPaint = new Paint();
+        Paint newGamePaint = new Paint();
+        resetPaint.setColor(Color.BLACK);
+        newGamePaint.setColor(Color.YELLOW);
 
         for (GameRectangle a : rects) {
             canvas.drawRect(a.getRect(), defaultPaint);
@@ -151,6 +197,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(down, buttonPaint);
         canvas.drawRect(right, buttonPaint);
         canvas.drawRect(left, buttonPaint);
+        canvas.drawRect(newGame, newGamePaint);
+        canvas.drawRect(reset, resetPaint);
         if (bruhmoment != null) {
             canvas.drawRect(bruhmoment, buttonPaint);
         }
