@@ -3,7 +3,9 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,7 +22,13 @@ public class MainActivity extends AppCompatActivity {
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ActualGame.class));
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                Intent a = new Intent(getApplicationContext(), ActualGame.class);
+                a.putExtra("sizeX", size.x);
+                a.putExtra("sizeY", size.y);
+                startActivity(a);
             }
         });
         leaderBoard.setOnClickListener(new View.OnClickListener() {
