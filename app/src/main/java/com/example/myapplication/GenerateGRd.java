@@ -10,4 +10,5 @@ public class GenerateGRd {
         gridSize = 3 + gridSize * 2;
 
     }
+
 }

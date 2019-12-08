@@ -8,10 +8,10 @@ public class Game extends AppCompatActivity {
     private int xPosition;
     private int yPosition;
     private int boardSize;
-    Game(int x, int y, int b) {
-        xPosition = x;
-        yPosition = y;
-        boardSize = b;
+    private int[] currentPosition = new int[2];
+    private int[] visitedPositions;
+    Game() {
+
     }
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
