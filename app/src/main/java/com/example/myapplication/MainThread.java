@@ -20,6 +20,9 @@ public class MainThread extends Thread {
         this.surfaceHolder = surfaceHolder;
         this.gamePanel = gamePanel;
     }
+    public void end() {
+        surfaceHolder.unlockCanvasAndPost(canvas);
+    }
 
     public static Canvas getCanvas() {
         return canvas;

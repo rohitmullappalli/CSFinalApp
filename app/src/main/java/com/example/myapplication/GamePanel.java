@@ -30,11 +30,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private RectF down;
     private RectF left;
     private RectF right;
-    private Rect bruhmoment;
+    private RectF bruhmoment;
     private List<Integer> listXOdd = new ArrayList<>();
     private List<Integer> listYOdd = new ArrayList<>();
     private List<Integer> listXEven = new ArrayList<>();
     private List<Integer> listYEven = new ArrayList<>();
+    private List<GameRectangle> list = new ArrayList<>();
+    private List<int[]> beenTo = new ArrayList<>();
     //newGame starts an actualGame activity, and gives it an intent to set level to 0.
     private RectF newGame;
     //newGame starts an actualGame activity, and gives it an intent to keep the level the same as well as the start and end points.
@@ -54,6 +56,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         possibleSolutions(level);
         start = randomSolution();
         end = randomSolution();
+        while (end[0] == start[0] && end[1] == start[1]) {
+            end = randomSolution();
+        }
         playerPosition = new int[]{start[0], start[1]};
 
         getHolder().addCallback(this);
@@ -77,6 +82,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         start = d;
         end = e;
         playerPosition = new int[]{d[0], d[1]};
+        beenTo.add(start);
 
         getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
@@ -115,32 +121,115 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         switch(eventAction) {
             case MotionEvent.ACTION_DOWN:
                 if (x < sizeX / 2 + 100 && x > sizeX / 2 - 100 && y < sizeY / 2 + 500 && y > sizeY / 2 + 300) {
-                    bruhmoment = new Rect(500, 500, 700, 700);
+                    int gridSize = level / 5;
+                    gridSize = 3 + gridSize * 2;
+                    boolean canGo = true;
+                    int[] haveBeen = new int[]{playerPosition[0], playerPosition[1] - 1};
+                    for (int[] a : beenTo) {
+                        if (a[0] == haveBeen[0] && a[1] == haveBeen[1]) {
+                            canGo = false;
+                        }
+                    }
+                    if (haveBeen[0] == start[0] && haveBeen[1] == start[1]) {
+                        canGo = false;
+                    }
+                    if (!(playerPosition[1] - 1 < 0) && canGo) {
+                        playerPosition[1]--;
+                        beenTo.add(haveBeen);
+                        for (GameRectangle a : rects) {
+                            if (a.getxCoord() == playerPosition[0] && a.getyCoord() == playerPosition[1]) {
+                                GameRectangle temp = new GameRectangle(a.getLeft(), a.getTop(), a.getRight(), a.getBottom(), playerPosition[0], playerPosition[1]);
+                                list.add(temp);
+                            }
+                        }
+                    }
                 }
                 if (x > sizeX / 2 - 100 && y > sizeY / 2 + 550 && x < sizeX / 2 + 100 && y < sizeY / 2 + 750) {
-                    bruhmoment = new Rect(300, 500, 500, 700);
+                    int gridSize = level / 5;
+                    gridSize = 3 + gridSize * 2;
+                    boolean canGo = true;
+                    int[] haveBeen = new int[]{playerPosition[0], playerPosition[1] + 1};
+                    for (int[] a : beenTo) {
+                        if (a[0] == haveBeen[0] && a[1] == haveBeen[1]) {
+                            canGo = false;
+                        }
+                    }
+                    if (haveBeen[0] == start[0] && haveBeen[1] == start[1]) {
+                        canGo = false;
+                    }
+                    if (!(playerPosition[1] + 1 > gridSize) && canGo) {
+                        playerPosition[1]++;
+                        beenTo.add(haveBeen);
+                        for (GameRectangle a : rects) {
+                            if (a.getxCoord() == playerPosition[0] && a.getyCoord() == playerPosition[1]) {
+                                GameRectangle temp = new GameRectangle(a.getLeft(), a.getTop(), a.getRight(), a.getBottom(), playerPosition[0], playerPosition[1]);
+                                list.add(temp);
+                            }
+                        }
+                    }
                 }
                 if (x > sizeX / 2 - 350 && y > sizeY / 2 + 550 && x < sizeX / 2 - 150 && y < sizeY / 2 + 750) {
-                    bruhmoment = new Rect(100, 500, 300, 700);
+                    int gridSize = level / 5;
+                    gridSize = 3 + gridSize * 2;
+                    boolean canGo = true;
+                    int[] haveBeen = new int[]{playerPosition[0] - 1, playerPosition[1]};
+                    for (int[] a : beenTo) {
+                        if (a[0] == haveBeen[0] && a[1] == haveBeen[1]) {
+                            canGo = false;
+                        }
+                    }
+                    if (haveBeen[0] == start[0] && haveBeen[1] == start[1]) {
+                        canGo = false;
+                    }
+                    if (!(playerPosition[0] - 1 < 0) && canGo) {
+                        playerPosition[0]--;
+                        beenTo.add(haveBeen);
+                        for (GameRectangle a : rects) {
+                            if (a.getxCoord() == playerPosition[0] && a.getyCoord() == playerPosition[1]) {
+                                GameRectangle temp = new GameRectangle(a.getLeft(), a.getTop(), a.getRight(), a.getBottom(), playerPosition[0], playerPosition[1]);
+                                list.add(temp);
+                            }
+                        }
+                    }
                 }
                 if (x < sizeX / 2 + 350 && y > sizeY / 2 + 550 && x > sizeX / 2 + 150 && y < sizeY / 2 + 750) {
-                    bruhmoment = new Rect(700, 500, 900, 700);
+                    int gridSize = level / 5;
+                    gridSize = 3 + gridSize * 2;
+                    boolean canGo = true;
+                    int[] haveBeen = new int[]{playerPosition[0] + 1, playerPosition[1]};
+                    for (int[] a : beenTo) {
+                        if (a[0] == haveBeen[0] && a[1] == haveBeen[1]) {
+                            canGo = false;
+                        }
+                    }
+                    if (haveBeen[0] == start[0] && haveBeen[1] == start[1]) {
+                        canGo = false;
+                    }
+                    if (!(playerPosition[0] + 1 > gridSize) && canGo) {
+                        playerPosition[0]++;
+                        beenTo.add(haveBeen);
+                        for (GameRectangle a : rects) {
+                            if (a.getxCoord() == playerPosition[0] && a.getyCoord() == playerPosition[1]) {
+                                GameRectangle temp = new GameRectangle(a.getLeft(), a.getTop(), a.getRight(), a.getBottom(), playerPosition[0], playerPosition[1]);
+                                list.add(temp);
+                            }
+                        }
+                    }
                 }
                 if (x > sizeX / 2 - 600 && x < sizeX / 2 - 400 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
                     Intent a = new Intent(getContext(), ActualGame.class);
                     a.putExtra("restart", 0);
-                    a.putExtra("sizeX", sizeX);
-                    a.putExtra("sizeY", sizeY);
+                    a.putExtra("sizeX", (int) sizeX);
+                    a.putExtra("sizeY", (int) sizeY);
                     getContext().startActivity(a);
-
                 }
                 if (x > sizeX / 2 + 400 && x < sizeX / 2 + 600 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
                     Intent a = new Intent(getContext(), ActualGame.class);
                     a.putExtra("reset1", level);
                     a.putExtra("start", start);
                     a.putExtra("end", end);
-                    a.putExtra("sizeX", sizeX);
-                    a.putExtra("sizeY", sizeY);
+                    a.putExtra("sizeX", (int) sizeX);
+                    a.putExtra("sizeY", (int) sizeY);
                     getContext().startActivity(a);
                 }
 
@@ -193,6 +282,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawRect(a.getRect(), endPaint);
             }
         }
+        for (GameRectangle a : list) {
+            canvas.drawRect(a.getRect(), buttonPaint);
+        }
         canvas.drawRect(up, buttonPaint);
         canvas.drawRect(down, buttonPaint);
         canvas.drawRect(right, buttonPaint);
@@ -201,6 +293,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(reset, resetPaint);
         if (bruhmoment != null) {
             canvas.drawRect(bruhmoment, buttonPaint);
+        }
+        if(playerPosition[0] == end[0] && playerPosition[1] == end[1]) {
+            if (beenTo.size() == rects.size()) {
+                Intent a = new Intent(getContext(), ActualGame.class);
+                a.putExtra("sizeX", sizeX);
+                a.putExtra("sizeY", sizeY);
+                getContext().startActivity(a);
+            }
+            Intent a = new Intent(getContext(), ActualGame.class);
+            a.putExtra("sizeX", (int) sizeX);
+            a.putExtra("sizeY", (int) sizeY);
+            thread.setRunning(false);
+            thread.end();
+            getContext().startActivity(a);
         }
     }
     public void possibleSolutions(int level) {
