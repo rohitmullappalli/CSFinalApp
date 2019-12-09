@@ -65,6 +65,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
+        beenTo.add(start);
 
 
     }
@@ -82,7 +83,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
-        while(true) {
+        while(retry) {
             try {
                 thread.setRunning(false);
                 thread.join();
@@ -136,7 +137,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     if (haveBeen[0] == start[0] && haveBeen[1] == start[1]) {
                         canGo = false;
                     }
-                    if (!(playerPosition[1] + 1 > gridSize) && canGo) {
+                    if (!(playerPosition[1] + 1 > gridSize - 1) && canGo) {
                         playerPosition[1]++;
                         beenTo.add(haveBeen);
                         for (GameRectangle a : rects) {
@@ -184,7 +185,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     if (haveBeen[0] == start[0] && haveBeen[1] == start[1]) {
                         canGo = false;
                     }
-                    if (!(playerPosition[0] + 1 > gridSize) && canGo) {
+                    if (!(playerPosition[0] + 1 > gridSize - 1) && canGo) {
                         playerPosition[0]++;
                         beenTo.add(haveBeen);
                         for (GameRectangle a : rects) {
@@ -207,8 +208,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+        int gridSize = level / 5;
+        gridSize = 3 + gridSize * 2;
+        System.out.println(beenTo.size() + " " + gridSize * gridSize);
         if(playerPosition[0] == end[0] && playerPosition[1] == end[1]) {
-            if (beenTo.size() == rects.size()) {
+            if (beenTo.size() == gridSize * gridSize) {
                 nextLevel();
             }
             //nextLevel();
@@ -228,6 +232,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             end = randomSolution();
         }
         playerPosition = new int[]{start[0], start[1]};
+        beenTo.add(start);
     }
     public void restart() {
         shouldClear = true;
@@ -235,12 +240,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         rects.clear();
         beenTo.clear();
         playerPosition = new int[]{start[0], start[1]};
+        beenTo.add(start);
 
     }
     public void mainMenu() {
         Activity activity = (Activity)getContext();
         activity.finish();
-        thread.setRunning(false);
 
     }
     @Override
