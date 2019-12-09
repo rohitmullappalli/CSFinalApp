@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Size;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -51,8 +52,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         down = new RectF(sizeX / 2 - 100, sizeY / 2 + 550, sizeX / 2 + 100, sizeY / 2 + 750);
         left = new RectF(sizeX / 2 - 350, sizeY / 2 + 550, sizeX / 2 - 150, sizeY / 2 + 750);
         right = new RectF(sizeX / 2 + 350, sizeY / 2 + 550, sizeX / 2 + 150, sizeY / 2 + 750);
-        newGame = new RectF(sizeX / 2 - 600, sizeY / 2 + 300, sizeX / 2 - 400, sizeY / 2 + 500);
-        reset = new RectF(sizeX / 2 + 400, sizeY / 2 + 300, sizeX / 2 + 600, sizeY / 2 + 500);
+        newGame = new RectF(sizeX / 2 - 450, sizeY / 2 + 300, sizeX / 2 - 250, sizeY / 2 + 500);
+        reset = new RectF(sizeX / 2 + 250, sizeY / 2 + 300, sizeX / 2 + 450, sizeY / 2 + 500);
         level = c;
         possibleSolutions(level);
         start = randomSolution();
@@ -196,10 +197,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                         }
                     }
                 }
-                if (x > sizeX / 2 - 600 && x < sizeX / 2 - 400 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
+                if (x > sizeX / 2 - 450 && x < sizeX / 2 - 250 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
                     restart();
                 }
-                if (x > sizeX / 2 + 400 && x < sizeX / 2 + 600 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
+                if (x > sizeX / 2 + 250 && x < sizeX / 2 + 450 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
                     mainMenu();
                 }
 
@@ -251,7 +252,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(Color.rgb(0, 7, 110));
         if (shouldClear) {
             RectF clear = new RectF(0, 0, sizeX, sizeY);
             Paint clearPaint = new Paint();
@@ -272,17 +273,36 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             System.out.println(rects.size());
 
             Paint defaultPaint = new Paint();
-            defaultPaint.setColor(Color.rgb(255, 0, 255));
+            defaultPaint.setColor(Color.rgb(255, 255, 255));
             Paint startPaint = new Paint();
-            startPaint.setColor(Color.BLUE);
+            startPaint.setColor(Color.rgb(131, 139, 255));
             Paint endPaint = new Paint();
-            endPaint.setColor(Color.RED);
+            endPaint.setColor(Color.rgb(76, 80, 135));
             Paint buttonPaint = new Paint();
-            buttonPaint.setColor(Color.GREEN);
+            buttonPaint.setColor(Color.BLACK);
             Paint resetPaint = new Paint();
             Paint newGamePaint = new Paint();
             resetPaint.setColor(Color.BLACK);
-            newGamePaint.setColor(Color.YELLOW);
+            newGamePaint.setColor(Color.BLACK);
+            String upText = "Up";
+            String downText = "Down";
+            String leftText = "Left";
+            String rightText = "Right";
+            String restartText = "Reset";
+            String menuText = "Menu";
+            String startText = "Start";
+            String endText = "End";
+            String scoreText = "Level:" + level;
+            Paint textPaint = new Paint();
+            textPaint.setColor(Color.WHITE);
+            textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            textPaint.setTextSize(80f);
+            float textwidthup = textPaint.measureText(upText);
+            float textwidthdown = textPaint.measureText(downText);
+            float textwidthleft = textPaint.measureText(leftText);
+            float textwidthright = textPaint.measureText(rightText);
+            float textwidthrestart = textPaint.measureText(restartText);
+            float textwidthmenu = textPaint.measureText(menuText);
 
             for (GameRectangle a : rects) {
                 canvas.drawRect(a.getRect(), defaultPaint);
@@ -306,6 +326,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawRect(left, buttonPaint);
             canvas.drawRect(newGame, newGamePaint);
             canvas.drawRect(reset, resetPaint);
+            canvas.drawText(upText, sizeX / 2 - 40, sizeY / 2 + 430, textPaint);
+            canvas.drawText(downText, sizeX / 2 - 100, sizeY / 2 + 680, textPaint);
+            canvas.drawText(leftText, sizeX / 2 - 350, sizeY / 2 + 680, textPaint);
+            canvas.drawText(rightText, sizeX / 2 + 150, sizeY / 2 + 680, textPaint);
+            canvas.drawText(restartText, sizeX / 2 - 450, sizeY / 2 + 430, textPaint);
+            canvas.drawText(menuText, sizeX  / 2 + 250, sizeY / 2 + 430, textPaint);
+            canvas.drawText(scoreText, sizeX / 2 - 120, sizeY / 2 + 270, textPaint);
             }
         }
 

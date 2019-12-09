@@ -31,7 +31,4 @@ public class ActualGame extends AppCompatActivity {
         sizeY = getIntent().getIntExtra("sizeY", 0);
         setContentView(new GamePanel(this, sizeX, sizeY, level));
     }
-    protected void mainMenuTest() {
-
-    }
 }
