@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -19,7 +20,7 @@ import java.util.Random;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
-    private static int level = 5;
+    private static int level;
     private List<GameRectangle> rects = new ArrayList<GameRectangle>();
     private float sizeX;
     private float sizeY;
@@ -30,13 +31,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private RectF down;
     private RectF left;
     private RectF right;
-    private RectF bruhmoment;
     private List<Integer> listXOdd = new ArrayList<>();
     private List<Integer> listYOdd = new ArrayList<>();
     private List<Integer> listXEven = new ArrayList<>();
     private List<Integer> listYEven = new ArrayList<>();
     private List<GameRectangle> list = new ArrayList<>();
     private List<int[]> beenTo = new ArrayList<>();
+    private boolean shouldClear = false;
     //newGame starts an actualGame activity, and gives it an intent to set level to 0.
     private RectF newGame;
     //newGame starts an actualGame activity, and gives it an intent to keep the level the same as well as the start and end points.
@@ -67,29 +68,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
     }
-    public GamePanel(Context context, float a, float b, int c, int[] d, int[] e) {
-        super(context);
-        sizeX = a;
-        sizeY = b;
-        up = new RectF(sizeX / 2 - 100,sizeY / 2 + 300,sizeX / 2 + 100,sizeY / 2 + 500);
-        down = new RectF(sizeX / 2 - 100, sizeY / 2 + 550, sizeX / 2 + 100, sizeY / 2 + 750);
-        left = new RectF(sizeX / 2 - 350, sizeY / 2 + 550, sizeX / 2 - 150, sizeY / 2 + 750);
-        right = new RectF(sizeX / 2 + 350, sizeY / 2 + 550, sizeX / 2 + 150, sizeY / 2 + 750);
-        newGame = new RectF(sizeX / 2 - 600, sizeY / 2 + 300, sizeX / 2 - 400, sizeY / 2 + 500);
-        reset = new RectF(sizeX / 2 + 400, sizeY / 2 + 300, sizeX / 2 + 600, sizeY / 2 + 500);
-        level = c;
-        possibleSolutions(level);
-        start = d;
-        end = e;
-        playerPosition = new int[]{d[0], d[1]};
-        beenTo.add(start);
-
-        getHolder().addCallback(this);
-        thread = new MainThread(getHolder(), this);
-        setFocusable(true);
-
-
-    }
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
@@ -110,7 +88,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 thread.join();
             } catch(Exception e) {
                 e.printStackTrace();
-            } retry = false;
+            }
+            retry = false;
         }
     }
     @Override
@@ -217,20 +196,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
                 if (x > sizeX / 2 - 600 && x < sizeX / 2 - 400 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
-                    Intent a = new Intent(getContext(), ActualGame.class);
-                    a.putExtra("restart", 0);
-                    a.putExtra("sizeX", (int) sizeX);
-                    a.putExtra("sizeY", (int) sizeY);
-                    getContext().startActivity(a);
+                    restart();
                 }
                 if (x > sizeX / 2 + 400 && x < sizeX / 2 + 600 && y > sizeY / 2 + 300 && y < sizeY / 2 + 500) {
-                    Intent a = new Intent(getContext(), ActualGame.class);
-                    a.putExtra("reset1", level);
-                    a.putExtra("start", start);
-                    a.putExtra("end", end);
-                    a.putExtra("sizeX", (int) sizeX);
-                    a.putExtra("sizeY", (int) sizeY);
-                    getContext().startActivity(a);
+                    mainMenu();
                 }
 
         }
@@ -238,77 +207,103 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+        if(playerPosition[0] == end[0] && playerPosition[1] == end[1]) {
+            if (beenTo.size() == rects.size()) {
+                nextLevel();
+            }
+            //nextLevel();
+        }
+
+    }
+    public void nextLevel() {
+        shouldClear = true;
+        list.clear();
+        rects.clear();
+        beenTo.clear();
+        level++;
+        possibleSolutions(level);
+        start = randomSolution();
+        end = randomSolution();
+        while (end[0] == start[0] && end[1] == start[1]) {
+            end = randomSolution();
+        }
+        playerPosition = new int[]{start[0], start[1]};
+    }
+    public void restart() {
+        shouldClear = true;
+        list.clear();
+        rects.clear();
+        beenTo.clear();
+        playerPosition = new int[]{start[0], start[1]};
+
+    }
+    public void mainMenu() {
+        Activity activity = (Activity)getContext();
+        activity.finish();
+        thread.setRunning(false);
 
     }
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
         canvas.drawColor(Color.WHITE);
-        int gridSize = level / 5;
-        gridSize = 3 + gridSize * 2;
-        float rectX = sizeX / gridSize;
-        float rectY = sizeY / gridSize;
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                GameRectangle rect = new GameRectangle(j * rectX + 2, i * rectX + 2, (j + 1) * rectX - 2, (i + 1) * rectX - 2, j, i);
-                rects.add(rect);
+        if (shouldClear) {
+            RectF clear = new RectF(0, 0, sizeX, sizeY);
+            Paint clearPaint = new Paint();
+            clearPaint.setColor(Color.WHITE);
+            canvas.drawRect(clear, clearPaint);
+            shouldClear = false;
+        } else {
+            int gridSize = level / 5;
+            gridSize = 3 + gridSize * 2;
+            float rectX = sizeX / gridSize;
+            float rectY = sizeY / gridSize;
+            for (int i = 0; i < gridSize; i++) {
+                for (int j = 0; j < gridSize; j++) {
+                    GameRectangle rect = new GameRectangle(j * rectX + 2, i * rectX + 2, (j + 1) * rectX - 2, (i + 1) * rectX - 2, j, i);
+                    rects.add(rect);
+                }
             }
-        }
-        System.out.println(rects.size());
+            System.out.println(rects.size());
 
-        Paint defaultPaint = new Paint();
-        defaultPaint.setColor(Color.rgb(255,0,255));
-        Paint startPaint = new Paint();
-        startPaint.setColor(Color.BLUE);
-        Paint endPaint = new Paint();
-        endPaint.setColor(Color.RED);
-        Paint buttonPaint = new Paint();
-        buttonPaint.setColor(Color.GREEN);
-        Paint resetPaint = new Paint();
-        Paint newGamePaint = new Paint();
-        resetPaint.setColor(Color.BLACK);
-        newGamePaint.setColor(Color.YELLOW);
+            Paint defaultPaint = new Paint();
+            defaultPaint.setColor(Color.rgb(255, 0, 255));
+            Paint startPaint = new Paint();
+            startPaint.setColor(Color.BLUE);
+            Paint endPaint = new Paint();
+            endPaint.setColor(Color.RED);
+            Paint buttonPaint = new Paint();
+            buttonPaint.setColor(Color.GREEN);
+            Paint resetPaint = new Paint();
+            Paint newGamePaint = new Paint();
+            resetPaint.setColor(Color.BLACK);
+            newGamePaint.setColor(Color.YELLOW);
 
-        for (GameRectangle a : rects) {
-            canvas.drawRect(a.getRect(), defaultPaint);
-        }
-        for (GameRectangle a : rects) {
-            if (a.getxCoord() == start[0] && a.getyCoord() == start[1]) {
-                canvas.drawRect(a.getRect(), startPaint);
+            for (GameRectangle a : rects) {
+                canvas.drawRect(a.getRect(), defaultPaint);
+            }
+            for (GameRectangle a : rects) {
+                if (a.getxCoord() == start[0] && a.getyCoord() == start[1]) {
+                    canvas.drawRect(a.getRect(), startPaint);
+                }
+            }
+            for (GameRectangle a : rects) {
+                if (a.getxCoord() == end[0] && a.getyCoord() == end[1]) {
+                    canvas.drawRect(a.getRect(), endPaint);
+                }
+            }
+            for (GameRectangle a : list) {
+                canvas.drawRect(a.getRect(), buttonPaint);
+            }
+            canvas.drawRect(up, buttonPaint);
+            canvas.drawRect(down, buttonPaint);
+            canvas.drawRect(right, buttonPaint);
+            canvas.drawRect(left, buttonPaint);
+            canvas.drawRect(newGame, newGamePaint);
+            canvas.drawRect(reset, resetPaint);
             }
         }
-        for (GameRectangle a : rects) {
-            if (a.getxCoord() == end[0] && a.getyCoord() == end[1]) {
-                canvas.drawRect(a.getRect(), endPaint);
-            }
-        }
-        for (GameRectangle a : list) {
-            canvas.drawRect(a.getRect(), buttonPaint);
-        }
-        canvas.drawRect(up, buttonPaint);
-        canvas.drawRect(down, buttonPaint);
-        canvas.drawRect(right, buttonPaint);
-        canvas.drawRect(left, buttonPaint);
-        canvas.drawRect(newGame, newGamePaint);
-        canvas.drawRect(reset, resetPaint);
-        if (bruhmoment != null) {
-            canvas.drawRect(bruhmoment, buttonPaint);
-        }
-        if(playerPosition[0] == end[0] && playerPosition[1] == end[1]) {
-            if (beenTo.size() == rects.size()) {
-                Intent a = new Intent(getContext(), ActualGame.class);
-                a.putExtra("sizeX", sizeX);
-                a.putExtra("sizeY", sizeY);
-                getContext().startActivity(a);
-            }
-            Intent a = new Intent(getContext(), ActualGame.class);
-            a.putExtra("sizeX", (int) sizeX);
-            a.putExtra("sizeY", (int) sizeY);
-            thread.setRunning(false);
-            thread.end();
-            getContext().startActivity(a);
-        }
-    }
+
     public void possibleSolutions(int level) {
         int gridSize = level / 5;
         gridSize = 3 + gridSize * 2;

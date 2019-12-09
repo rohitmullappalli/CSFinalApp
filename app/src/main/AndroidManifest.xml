@@ -11,8 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".ActualGame"></activity>
-        <activity android:name=".GameActivity" />
+        <activity android:name=".Menu"></activity>
+        <activity android:name=".ActualGame" />
         <activity android:name=".Leaderboard" />
         <activity android:name=".Login" />
         <activity android:name=".MainActivity" />

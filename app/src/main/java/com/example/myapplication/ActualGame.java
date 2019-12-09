@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActualGame extends AppCompatActivity {
-    private static int level = 7;
+    private static int level = 0;
     private List<GameRectangle> rects = new ArrayList<GameRectangle>();
     private int sizeX;
     private int sizeY;
@@ -29,17 +29,9 @@ public class ActualGame extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         sizeX = getIntent().getIntExtra("sizeX", 0);
         sizeY = getIntent().getIntExtra("sizeY", 0);
-        level++;
-        if (getIntent().getIntExtra("restart", 1) != 1) {
-            level = 1;
-            setContentView(new GamePanel(this, sizeX, sizeY, level));
-        }
-        if (getIntent().getIntExtra("reset", -1) != -1) {
-            level--;
-            int[] temp1 = getIntent().getIntArrayExtra("start");
-            int[] temp2 = getIntent().getIntArrayExtra("end");
-            setContentView(new GamePanel(this, sizeX, sizeY, level, temp1, temp2));
-        }
         setContentView(new GamePanel(this, sizeX, sizeY, level));
+    }
+    protected void mainMenuTest() {
+
     }
 }
