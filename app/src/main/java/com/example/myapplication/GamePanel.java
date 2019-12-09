@@ -67,6 +67,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
         beenTo.add(start);
+        int gridSize = level / 5;
+        gridSize = 3 + gridSize * 2;
+        float rectX = sizeX / gridSize;
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                GameRectangle rect = new GameRectangle(j * rectX + 2, i * rectX + 2, (j + 1) * rectX - 2, (i + 1) * rectX - 2, j, i);
+                rects.add(rect);
+            }
+        }
 
 
     }
@@ -232,11 +241,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         playerPosition = new int[]{start[0], start[1]};
         beenTo.add(start);
-        shouldClear = true;
+        int gridSize = level / 5;
+        gridSize = 3 + gridSize * 2;
+        float rectX = sizeX / gridSize;
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                GameRectangle rect = new GameRectangle(j * rectX + 2, i * rectX + 2, (j + 1) * rectX - 2, (i + 1) * rectX - 2, j, i);
+                rects.add(rect);
+            }
+        }
     }
     public void restart() {
         list.clear();
-        rects.clear();
         beenTo.clear();
         playerPosition = new int[]{start[0], start[1]};
         beenTo.add(start);
@@ -255,15 +271,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         //clearPaint.setColor(Color.WHITE);
         //canvas.drawRect(clear, clearPaint);
         canvas.drawColor(Color.rgb(0, 7, 110));
-        int gridSize = level / 5;
-        gridSize = 3 + gridSize * 2;
-        float rectX = sizeX / gridSize;
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                GameRectangle rect = new GameRectangle(j * rectX + 2, i * rectX + 2, (j + 1) * rectX - 2, (i + 1) * rectX - 2, j, i);
-                rects.add(rect);
-            }
-        }
         Paint defaultPaint = new Paint();
         defaultPaint.setColor(Color.rgb(255, 255, 255));
         Paint startPaint = new Paint();
@@ -308,22 +315,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         updateDraw(canvas);
-        if (shouldClear) {
-            updateDraw(canvas);
-            shouldClear = false;
-        } else {
-            Paint buttonPaint = new Paint();
-            buttonPaint.setColor(Color.BLACK);
-            String scoreText = "Level:" + level;
-            for (GameRectangle a : list) {
-                canvas.drawRect(a.getRect(), buttonPaint);
-            }
-            Paint textPaint = new Paint();
-            textPaint.setColor(Color.WHITE);
-            textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-            textPaint.setTextSize(80f);
-            canvas.drawText(scoreText, sizeX / 2 - 120, sizeY / 2 + 270, textPaint);
-            }
+        Paint buttonPaint = new Paint();
+        buttonPaint.setColor(Color.BLACK);
+        String scoreText = "Level:" + level;
+        for (GameRectangle a : list) {
+            canvas.drawRect(a.getRect(), buttonPaint);
+        }
+        Paint textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        textPaint.setTextSize(80f);
+        canvas.drawText(scoreText, sizeX / 2 - 120, sizeY / 2 + 270, textPaint);
         }
 
     public void possibleSolutions(int level) {

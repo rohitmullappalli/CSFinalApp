@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button startGame = findViewById(R.id.start);
-        Button leaderBoard = findViewById(R.id.leaderboard);
         TextView welcome = findViewById(R.id.Welcome);
         TextView rules = findViewById(R.id.rules);
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
@@ -36,12 +35,6 @@ public class MainActivity extends AppCompatActivity {
                 a.putExtra("sizeX", size.x);
                 a.putExtra("sizeY", size.y);
                 startActivity(a);
-            }
-        });
-        leaderBoard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Leaderboard.class));
             }
         });
     }
