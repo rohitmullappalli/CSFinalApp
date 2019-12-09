@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button startGame = findViewById(R.id.start);
         Button leaderBoard = findViewById(R.id.leaderboard);
+        TextView welcome = findViewById(R.id.Welcome);
+        TextView rules = findViewById(R.id.rules);
+        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+        fAuth.getCurrentUser().getDisplayName();
+
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -38,7 +38,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private List<Integer> listYEven = new ArrayList<>();
     private List<GameRectangle> list = new ArrayList<>();
     private List<int[]> beenTo = new ArrayList<>();
-    private boolean shouldClear = false;
+    private boolean shouldClear = true;
     //newGame starts an actualGame activity, and gives it an intent to set level to 0.
     private RectF newGame;
     //newGame starts an actualGame activity, and gives it an intent to keep the level the same as well as the start and end points.
@@ -211,7 +211,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         int gridSize = level / 5;
         gridSize = 3 + gridSize * 2;
-        System.out.println(beenTo.size() + " " + gridSize * gridSize);
         if(playerPosition[0] == end[0] && playerPosition[1] == end[1]) {
             if (beenTo.size() == gridSize * gridSize) {
                 nextLevel();
@@ -221,7 +220,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     }
     public void nextLevel() {
-        shouldClear = true;
         list.clear();
         rects.clear();
         beenTo.clear();
@@ -234,14 +232,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         playerPosition = new int[]{start[0], start[1]};
         beenTo.add(start);
+        shouldClear = true;
     }
     public void restart() {
-        shouldClear = true;
         list.clear();
         rects.clear();
         beenTo.clear();
         playerPosition = new int[]{start[0], start[1]};
         beenTo.add(start);
+        shouldClear = true;
 
     }
     public void mainMenu() {
@@ -249,89 +248,80 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         activity.finish();
 
     }
+    public void updateDraw(Canvas canvas) {
+        System.out.println("test");
+        //RectF clear = new RectF(0, 0, sizeX, sizeY);
+        //Paint clearPaint = new Paint();
+        //clearPaint.setColor(Color.WHITE);
+        //canvas.drawRect(clear, clearPaint);
+        canvas.drawColor(Color.rgb(0, 7, 110));
+        int gridSize = level / 5;
+        gridSize = 3 + gridSize * 2;
+        float rectX = sizeX / gridSize;
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                GameRectangle rect = new GameRectangle(j * rectX + 2, i * rectX + 2, (j + 1) * rectX - 2, (i + 1) * rectX - 2, j, i);
+                rects.add(rect);
+            }
+        }
+        Paint defaultPaint = new Paint();
+        defaultPaint.setColor(Color.rgb(255, 255, 255));
+        Paint startPaint = new Paint();
+        startPaint.setColor(Color.rgb(131, 139, 255));
+        Paint endPaint = new Paint();
+        endPaint.setColor(Color.rgb(76, 80, 135));
+        Paint buttonPaint = new Paint();
+        buttonPaint.setColor(Color.BLACK);
+        for (GameRectangle a : rects) {
+            canvas.drawRect(a.getRect(), defaultPaint);
+            if (a.getxCoord() == start[0] && a.getyCoord() == start[1]) {
+                canvas.drawRect(a.getRect(), startPaint);
+            }
+            if (a.getxCoord() == end[0] && a.getyCoord() == end[1]) {
+                canvas.drawRect(a.getRect(), endPaint);
+            }
+        }
+        Paint textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        textPaint.setTextSize(80f);
+        String upText = "Up";
+        String downText = "Down";
+        String leftText = "Left";
+        String rightText = "Right";
+        String restartText = "Reset";
+        String menuText = "Menu";
+        canvas.drawRect(up, buttonPaint);
+        canvas.drawRect(down, buttonPaint);
+        canvas.drawRect(right, buttonPaint);
+        canvas.drawRect(left, buttonPaint);
+        canvas.drawRect(newGame, buttonPaint);
+        canvas.drawRect(reset, buttonPaint);
+        canvas.drawText(upText, sizeX / 2 - 40, sizeY / 2 + 430, textPaint);
+        canvas.drawText(downText, sizeX / 2 - 100, sizeY / 2 + 680, textPaint);
+        canvas.drawText(leftText, sizeX / 2 - 350, sizeY / 2 + 680, textPaint);
+        canvas.drawText(rightText, sizeX / 2 + 150, sizeY / 2 + 680, textPaint);
+        canvas.drawText(restartText, sizeX / 2 - 450, sizeY / 2 + 430, textPaint);
+        canvas.drawText(menuText, sizeX  / 2 + 250, sizeY / 2 + 430, textPaint);
+    }
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        canvas.drawColor(Color.rgb(0, 7, 110));
+        updateDraw(canvas);
         if (shouldClear) {
-            RectF clear = new RectF(0, 0, sizeX, sizeY);
-            Paint clearPaint = new Paint();
-            clearPaint.setColor(Color.WHITE);
-            canvas.drawRect(clear, clearPaint);
+            updateDraw(canvas);
             shouldClear = false;
         } else {
-            int gridSize = level / 5;
-            gridSize = 3 + gridSize * 2;
-            float rectX = sizeX / gridSize;
-            float rectY = sizeY / gridSize;
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    GameRectangle rect = new GameRectangle(j * rectX + 2, i * rectX + 2, (j + 1) * rectX - 2, (i + 1) * rectX - 2, j, i);
-                    rects.add(rect);
-                }
-            }
-            System.out.println(rects.size());
-
-            Paint defaultPaint = new Paint();
-            defaultPaint.setColor(Color.rgb(255, 255, 255));
-            Paint startPaint = new Paint();
-            startPaint.setColor(Color.rgb(131, 139, 255));
-            Paint endPaint = new Paint();
-            endPaint.setColor(Color.rgb(76, 80, 135));
             Paint buttonPaint = new Paint();
             buttonPaint.setColor(Color.BLACK);
-            Paint resetPaint = new Paint();
-            Paint newGamePaint = new Paint();
-            resetPaint.setColor(Color.BLACK);
-            newGamePaint.setColor(Color.BLACK);
-            String upText = "Up";
-            String downText = "Down";
-            String leftText = "Left";
-            String rightText = "Right";
-            String restartText = "Reset";
-            String menuText = "Menu";
-            String startText = "Start";
-            String endText = "End";
             String scoreText = "Level:" + level;
+            for (GameRectangle a : list) {
+                canvas.drawRect(a.getRect(), buttonPaint);
+            }
             Paint textPaint = new Paint();
             textPaint.setColor(Color.WHITE);
             textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             textPaint.setTextSize(80f);
-            float textwidthup = textPaint.measureText(upText);
-            float textwidthdown = textPaint.measureText(downText);
-            float textwidthleft = textPaint.measureText(leftText);
-            float textwidthright = textPaint.measureText(rightText);
-            float textwidthrestart = textPaint.measureText(restartText);
-            float textwidthmenu = textPaint.measureText(menuText);
-
-            for (GameRectangle a : rects) {
-                canvas.drawRect(a.getRect(), defaultPaint);
-            }
-            for (GameRectangle a : rects) {
-                if (a.getxCoord() == start[0] && a.getyCoord() == start[1]) {
-                    canvas.drawRect(a.getRect(), startPaint);
-                }
-            }
-            for (GameRectangle a : rects) {
-                if (a.getxCoord() == end[0] && a.getyCoord() == end[1]) {
-                    canvas.drawRect(a.getRect(), endPaint);
-                }
-            }
-            for (GameRectangle a : list) {
-                canvas.drawRect(a.getRect(), buttonPaint);
-            }
-            canvas.drawRect(up, buttonPaint);
-            canvas.drawRect(down, buttonPaint);
-            canvas.drawRect(right, buttonPaint);
-            canvas.drawRect(left, buttonPaint);
-            canvas.drawRect(newGame, newGamePaint);
-            canvas.drawRect(reset, resetPaint);
-            canvas.drawText(upText, sizeX / 2 - 40, sizeY / 2 + 430, textPaint);
-            canvas.drawText(downText, sizeX / 2 - 100, sizeY / 2 + 680, textPaint);
-            canvas.drawText(leftText, sizeX / 2 - 350, sizeY / 2 + 680, textPaint);
-            canvas.drawText(rightText, sizeX / 2 + 150, sizeY / 2 + 680, textPaint);
-            canvas.drawText(restartText, sizeX / 2 - 450, sizeY / 2 + 430, textPaint);
-            canvas.drawText(menuText, sizeX  / 2 + 250, sizeY / 2 + 430, textPaint);
             canvas.drawText(scoreText, sizeX / 2 - 120, sizeY / 2 + 270, textPaint);
             }
         }
