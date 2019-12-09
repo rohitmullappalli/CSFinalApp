@@ -20,6 +20,11 @@ public class MainThread extends Thread {
         this.surfaceHolder = surfaceHolder;
         this.gamePanel = gamePanel;
     }
+
+    public static Canvas getCanvas() {
+        return canvas;
+    }
+
     @Override
     public void run() {
         long startTime;
