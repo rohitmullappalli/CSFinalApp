@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button startGame = findViewById(R.id.start);
         TextView welcome = findViewById(R.id.Welcome);
-        TextView rules = findViewById(R.id.rules);
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
         fAuth.getCurrentUser().getDisplayName();
 

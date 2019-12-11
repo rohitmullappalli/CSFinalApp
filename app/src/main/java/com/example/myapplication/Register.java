@@ -53,15 +53,19 @@ public class Register extends AppCompatActivity {
                 String password = ePassword.getText().toString().trim();
                 if(TextUtils.isEmpty(email)) {
                     eEmail.setError("Must have an Email");
+                    return;
                 }
                 if(TextUtils.isEmpty(password)) {
                     ePassword.setError("Must have a password");
+                    return;
                 }
                 if(TextUtils.isEmpty(name)) {
                     eName.setError("At least one character is required in Name");
+                    return;
                 }
                 if(password.length() < 5) {
                     ePassword.setError("Password must be at least 5 characters");
+                    return;
                 }
                 fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
